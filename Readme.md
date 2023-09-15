@@ -15,3 +15,4 @@ Unit tests:
 Sources:
 
 http://xunitpatterns.com/Test%20Stub.html
+Python unit test framework: https://docs.python.org/3/library/unittest.html
