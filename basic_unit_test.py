@@ -84,8 +84,8 @@ def function2(an_object: SomeObject) -> list:
 def function2_2(an_object: SomeObject):
     try:
         function2(an_object)
-    except AttributeError:
-        raise TypeError("this should be caught")
+    except TypeError:
+        raise NameError("this should be caught")
 
 
 def function3(ob: SomeObject, list_to_sort: list) :
@@ -93,9 +93,6 @@ def function3(ob: SomeObject, list_to_sort: list) :
     ob.merge_sort(list_to_sort)
 
 
-def function3_2(ob: SomeObject, list_to_sort: list) -> list:
-    # return list values
-    return ob.merge_sort(list_to_sort)
 # stubs in testing
 
 
@@ -125,11 +122,12 @@ class TestTuto(unittest.TestCase):
         self.assertEqual(res, [1,2,3,1])
         
         # stubs can also be used to test if an exception is raised
-        stub.call_something = MagicMock(return_value=TypeError("This error is"
-                                        "triggered for the sake of testing"))
+        stub.call_something.side_effect=TypeError("This error is"
+                                        "triggered for the sake of testing")
         
         # here we are testing exception is raised and handled accordingly by the try/catch statement
-        function2_2(stub)
+        with self.assertRaises(NameError):
+            function2_2(stub)
         
         
     def test_with_spy(self):
@@ -146,7 +144,7 @@ class TestTuto(unittest.TestCase):
         fake = FakeSomeObject()
         
         test_list = [2,1,3]
-        print(fake.sorted_list, fake.merge_sort([1]))
+
         function3(fake, test_list)
         
         
@@ -163,7 +161,7 @@ class TestTuto(unittest.TestCase):
                 raise TypeError 
             list_to_be_sorted.clear()
             list_to_be_sorted.extend([1,2,3])
-        mock.merge_sort = mock_merge_sort
+        mock.merge_sort.side_effect = mock_merge_sort
 
         function3(mock, test_list)
 
