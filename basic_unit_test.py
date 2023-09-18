@@ -31,7 +31,7 @@ class SomeObject:
     def call_something(a: list) -> list:
         return a + [1]
     
-    def merge_sort(self, myList):
+    def merge_sort(self, myList: list):
         if len(myList) > 1:
             mid = len(myList) // 2
             left = myList[:mid]
@@ -70,7 +70,7 @@ class SomeObject:
                 myList[k]=right[j]
                 j += 1
                 k += 1
-        return myList 
+
                 
 def function( ob: SomeObject):
     return {'entry1': ob}
@@ -88,7 +88,7 @@ def function2_2(an_object: SomeObject):
         raise NameError("this should be caught")
 
 
-def function3(ob: SomeObject, list_to_sort: list) :
+def function3(ob: SomeObject, list_to_sort: list):
     # handle list through reference
     ob.merge_sort(list_to_sort)
 
@@ -131,7 +131,7 @@ class TestTuto(unittest.TestCase):
         
         
     def test_with_spy(self):
-        # we want to see if function is called with the correct 
+        # we want to see if function is called with the expected arguments
         spy = MagicMock(spec=SomeObject)
         function2(spy)
         
@@ -139,18 +139,13 @@ class TestTuto(unittest.TestCase):
         spy.call_something.assert_called_once_with([1,2,3])
     
     def test_with_fake(self):
-        
         FakeSomeObject.sorted_list = [1,2,3]  # here we pass the result of the sorting operation
         fake = FakeSomeObject()
         
         test_list = [2,1,3]
-
         function3(fake, test_list)
-        
-        
         self.assertEqual(test_list, [1, 2, 3])
         
-    
     def test_with_mock(self):
         # by oppositon to stubs, mocks come with one extra step: set_expectation
         test_list = [2,1,3]

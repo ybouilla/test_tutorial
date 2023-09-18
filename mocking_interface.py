@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 import unittest
 from sqlalchemy import insert
 from sqlalchemy import table
@@ -23,7 +23,7 @@ class DataBaseManager:
             
 
 
-class TestDataBaseManager(unittest.TestCase):
+class UnitTestDataBaseManager(unittest.TestCase):
 
     @patch('__main__.insert')
     @patch('__main__.create_engine')
@@ -41,8 +41,26 @@ class TestDataBaseManager(unittest.TestCase):
         # using spies
         patch_sqlalchemy_insert.assert_called_once_with(dbm._table)
         patch_sqlalchemy_insert.return_value.values.assert_called_once_with(name='first', extra='last')
-        
+        patch_sqlalchemy_insert.return_value.values.return_value.compile.assert_called_once()
         patch_create_engine.return_value.connect.assert_called_once()
+
+
+class IntegrationTest(unittest.TestCase):
+    
+    def setUp(self) -> None:
+        # set up a testing evironment
+        # we will create a database 
+        self.dbm = DataBaseManager()
+        
+    def tearDown(self) -> None:
+        # destroy testing environment for the database
+        self.dbm.remove()
+
+    def test_databasemanager_add(self):
+        self.dbm.add("fist", "last")
+        
+        # check that dbm has saved correct entries
+        self.dbm.get("first", "last")
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
